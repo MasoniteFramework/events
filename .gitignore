@@ -1,0 +1,4 @@
+venv
+**/*.pyc
+masonite_events.egg*
+.pytest*
