@@ -23,6 +23,7 @@ class TestEvent:
         event = Event(self.app)
 
         self.app.bind('Event', event)
+
     def test_fire_event_with_wildcard_ends_with(self):
         events = self.app.make('Event').listen('user.registered', [
             EventListener, EventListener
