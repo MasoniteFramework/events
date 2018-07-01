@@ -5,3 +5,5 @@ source = events
 ignore_errors = True
 omit =
     */tests/*
+    events/providers
+    events/commands
