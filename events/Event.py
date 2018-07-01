@@ -1,3 +1,5 @@
+from events.exceptions import InvalidSubscriptionType
+
 class Event:
     listeners = {}
     _fired_events = {}
@@ -41,3 +43,10 @@ class Event:
                 new_dictionary.update({event: listeners})
 
         return new_dictionary
+
+    def subscribe(self, *listeners):
+        for listener in listeners:
+            if not isinstance(listener.subscribe, list):
+                raise InvalidSubscriptionType("'subscribe' attribute on {0} class must be a list".format(listener.__name__))
+            for action in listener.subscribe:
+                self.listen(action, [listener])

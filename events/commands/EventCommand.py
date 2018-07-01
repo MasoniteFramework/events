@@ -22,7 +22,7 @@ class EventCommand(Command):
 
             f.write('""" A {0} Event """\n'.format(event))
             f.write('from events import Event\n\n')
-            f.write('class {0}(Event):\n    """ {0} Event Class """\n\n    def handle(self):\n        """ Event Handle Method """\n        pass\n'.format(event))
+            f.write('class {0}(Event):\n    """ {0} Event Class """\n\n    def __init__(self):\n        pass\n\n    def handle(self):\n        """ Event Handle Method """\n        pass\n'.format(event))
 
             self.info('Event Created Successfully!')
         else:

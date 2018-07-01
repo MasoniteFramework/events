@@ -1,6 +1,8 @@
 from masonite.app import App
 from events import Event
 import time
+import pytest
+from events.exceptions import InvalidSubscriptionType
 
 class UserAddedEvent:
     pass
@@ -9,6 +11,10 @@ class EventListener:
 
     def handle(self):
         pass
+
+class EventWithSubscriber:
+
+    subscribe = ['user.registered']
 
 class TestEvent:
 
@@ -78,3 +84,27 @@ class TestEvent:
         assert event.fire('user.*.registered') is None
         assert event._fired_events == {'user.manager.registered': [EventListener]}
 
+    def test_event_subscribers(self):
+        self.app.make('Event').listeners = {}
+        events = self.app.make('Event').subscribe(EventWithSubscriber)
+
+        assert self.app.make('Event').listeners == {'user.registered': [EventWithSubscriber]}
+
+    def test_event_with_multiple_subscribers(self):
+        self.app.make('Event').listeners = {}
+        event = EventWithSubscriber
+
+        event.subscribe = ['user.registered', 'user.subscribed']
+
+        events = self.app.make('Event').subscribe(event)
+
+        assert self.app.make('Event').listeners == {'user.registered': [EventWithSubscriber], 'user.subscribed': [EventWithSubscriber]}
+    
+    def test_event_with_throws_exception_with_invalid_subscribe_attribute_type(self):
+        self.app.make('Event').listeners = {}
+        event = EventWithSubscriber
+
+        event.subscribe = 'user.registered'
+
+        with pytest.raises(InvalidSubscriptionType):
+            self.app.make('Event').subscribe(event)
