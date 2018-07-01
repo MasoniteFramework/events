@@ -15,7 +15,6 @@ class Event:
         self.listeners.update({event: listeners})
         return self
     
-    # TODO: Add wildcard like self.fire('user.*')
     def fire(self, events):
         fired_listeners = {}
         if isinstance(events, str) and '*' in events:
