@@ -1,24 +1,18 @@
 language: python
-
 python:
 - '3.4'
 - '3.5'
 - '3.6'
-
 install:
 - pip install .
 - pip install -r requirements.txt
-
 script: travis_retry coverage run -m pytest
-
 deploy:
   provider: pypi
   user: josephmancuso
   password:
-    secure: WQo8L+H+PxetWuNIVSjKkSP/tgJLA+mNb4MRarmnnsc1sbUK23eF4syIAjvg90AnKo0BbCktmGt37HVuu5UHwfR13g5X1Bp3JaTr6RciR+hig8Fa0n2Vlwdy5YI7UNRX5r3cyVeryZRTgfMx/ALIwAz6/vJHz4AHezVcT0oO5yJ7mhlCx45dS5tTsZnU0vvNzGSMhuKq8lwPj632S6DUa8J5GwIubdj6PigSDhHTRZyMOxoyBq+uwWH0/hmKHcpXHG5n5iF94wZ8bwmmHHl5cXdhwbMBDu4+82cYoJSDtLA4IcRbtdUpYdX+vrQf1cte7lkUbKr6WUBaeAAtO2IFow+Fi/RROVxO3Smygi+XkIXgoSVNlRFaT1DnqM9zTEeeeb0hGrmdKtqCLTcHEKayoQJFpp6Q2w4iHwjk+xJuj0Kj8jJenTURUxoYwW8KYGvOJoFDRmXjntI6Mh2Gp3sZ3Kwc/XVyCzNmFfvlOBWgWAooqvzN5zxlCv7lGBcPtoNazAwGKF4znVULx0WzkckqImNYohEwxtbLvTouwTpLZPaHF+GwJMSPcoOilAsju0+3EBsPWGUpXuV4Nae09nkbemsyRqYM9lcLaNlKBME/Jqk7cdWa3OLAsVrcjfToPJLJZx5FwpzPEO/6Omq83zaCYW3Z06sf+cnAhrdOaaWWKTQ=
+    secure: VvQLs6sDZ8xuCO5/K3kyq9GPTfGq7u0selWNqQGgo/va4DTjO6rNOM0li8miSdO4pJwjAHM3Ddx6qzr+FaP+/rYUOXZNKTnwBRLQJZp815jWB7nuybal9kM2tgAbx9RgITHKeH52XVhDm6/M9dUiPTcrjKEOm8auTjgd8AL824Bg6BtTlguJPmeTNroL4ZQYPNKlOyEItubfpx/ZJTsOuay/fd03/Pf1l61bv14rxTYboyk6o3befqwAkUZD804cj9J7ujou/J+E9mmKgsJH9Q6g27N31F1KxaVbwwj8k+txuYOe3hVVAjcW3cFAQSf5AnJDyOIvav/igjXLoW8oN8H+Fx5QXMhoxrGqT0L7/I1xsqcj/ZD/y1Y+PKKW2qOArtE8cXgwPSHWNEpbENqj5i+CxWq64q3UE2/4WfXcBdbrAJmm669Lpt2n3zuHfJy/4NcZ361tvlr/TEtJZ3WT2EFJSQkh5dsl/VBpju87xmpnM9689YiWe9yhUi31Nj0Lj/OQDFnQdUesUlGEUNfuCJhsYriQGIpRYg76wcah49CgSDqbEibIQH/co7Zs2YLpeBn/n4CerjpEYPt9rduIeZqvEypPQCx8oYmBPcSKmV5VxoUwsv9FZvboGocnVfy5BnCQRNx6Y602omYVb8V+hyt/AhxixPAgyc+4JSbPMPM=
   on:
     tags: true
     python: 3.6
-
-after_success:
-  coveralls
+after_success: coveralls
