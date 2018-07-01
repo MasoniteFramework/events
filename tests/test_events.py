@@ -108,3 +108,8 @@ class TestEvent:
 
         with pytest.raises(InvalidSubscriptionType):
             self.app.make('Event').subscribe(event)
+
+    def test_event_starts_event_observer(self):
+        self.app.make('Event').listeners = {}
+        self.app.make('Event').event('user.subscribed')
+        assert self.app.make('Event').listeners == {'user.subscribed': []}

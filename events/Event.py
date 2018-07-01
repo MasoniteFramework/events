@@ -6,6 +6,9 @@ class Event:
 
     def __init__(self, container):
         self.container = container
+    
+    def event(self, event):
+        self.listen(event, [])
 
     def listen(self, event, listeners = []):
         if event in self.listeners:
