@@ -1,25 +1,48 @@
-from masonite.app import App
-from events import Event
 import time
+
 import pytest
+from masonite.app import App
+
+from events import Event
 from events.exceptions import InvalidSubscriptionType
 
-class UserAddedEvent:
+
+class UserAddedEvent(Event):
+    subscribe = []
+
+    def __init__(self):
+        pass
+
+    def handle(self):
+        pass
+
+
+class SomeAction:
     pass
+
 
 class EventListener:
 
     def handle(self):
         pass
 
-class EventWithSubscriber:
+
+class EventWithSubscriber(Event):
 
     subscribe = ['user.registered']
+
+    def __init__(self):
+        pass
+
+    def handle(self):
+        pass
+
 
 class TestEvent:
 
     def setup_method(self):
         self.app = App()
+        self.app.bind('Container', self.app)
         event = Event(self.app)
 
         self.app.bind('Event', event)
@@ -36,7 +59,8 @@ class TestEvent:
         event = self.app.make('Event')
 
         assert event.fire('*.registered') is None
-        assert event._fired_events == {'user.registered': [EventListener, EventListener]}
+        assert isinstance(
+            event._fired_events['user.registered'][0], EventListener)
 
     def test_add_listener(self):
         self.app.make('Event').listeners = {}
@@ -48,14 +72,17 @@ class TestEvent:
 
         events.listen(UserAddedEvent, [EventListener])
 
-        assert events.listeners == {UserAddedEvent: [EventListener, EventListener]}
-    
+        assert events.listeners == {
+            UserAddedEvent: [EventListener, EventListener]}
+
     def test_fire_event(self):
         events = self.app.make('Event').listen(UserAddedEvent, [
             EventListener
         ])
 
         assert events.fire(UserAddedEvent) is None
+        assert isinstance(
+            events._fired_events[UserAddedEvent][0], EventListener)
 
     def test_fire_event_with_wildcard_starts_with(self):
         self.app.make('Event').listeners = {}
@@ -69,7 +96,10 @@ class TestEvent:
         event = self.app.make('Event')
 
         assert event.fire('user.*') is None
-        assert event._fired_events == {'user.registered': [EventListener], 'user.subscribed': [EventListener]}
+        assert isinstance(
+            event._fired_events['user.registered'][0], EventListener)
+        assert isinstance(
+            event._fired_events['user.subscribed'][0], EventListener)
 
     def test_fire_event_with_wildcard_in_middle_of_fired_event(self):
         self.app.make('Event').listeners = {}
@@ -83,13 +113,15 @@ class TestEvent:
         event = self.app.make('Event')
 
         assert event.fire('user.*.registered') is None
-        assert event._fired_events == {'user.manager.registered': [EventListener]}
+        assert isinstance(
+            event._fired_events['user.manager.registered'][0], EventListener)
 
     def test_event_subscribers(self):
         self.app.make('Event').listeners = {}
         events = self.app.make('Event').subscribe(EventWithSubscriber)
 
-        assert self.app.make('Event').listeners == {'user.registered': [EventWithSubscriber]}
+        assert self.app.make('Event').listeners == {
+            'user.registered': [EventWithSubscriber]}
 
     def test_event_with_multiple_subscribers(self):
         self.app.make('Event').listeners = {}
@@ -97,10 +129,11 @@ class TestEvent:
 
         event.subscribe = ['user.registered', 'user.subscribed']
 
-        events = self.app.make('Event').subscribe(event)
+        self.app.make('Event').subscribe(event)
 
-        assert self.app.make('Event').listeners == {'user.registered': [EventWithSubscriber], 'user.subscribed': [EventWithSubscriber]}
-    
+        assert self.app.make('Event').listeners == {'user.registered': [
+            EventWithSubscriber], 'user.subscribed': [EventWithSubscriber]}
+
     def test_event_with_throws_exception_with_invalid_subscribe_attribute_type(self):
         self.app.make('Event').listeners = {}
         event = EventWithSubscriber
@@ -114,3 +147,20 @@ class TestEvent:
         self.app.make('Event').listeners = {}
         self.app.make('Event').event('user.subscribed')
         assert self.app.make('Event').listeners == {'user.subscribed': []}
+
+    def test_event_sets_keyword_arguments(self):
+        self.app.make('Event').listeners = {}
+        event = EventWithSubscriber
+
+        event.subscribe = ['user.registered', SomeAction]
+
+        self.app.make('Event').subscribe(event)
+
+        self.app.make('Event').fire('user.registered', to='user@email.com')
+        assert self.app.make('Event')._fired_events['user.registered'][0].argument(
+            'to') == 'user@email.com'
+
+        self.app.make('Event').fire(SomeAction, to='test@email.com')
+
+        assert self.app.make('Event')._fired_events[SomeAction][0].argument(
+            'to') == 'test@email.com'
