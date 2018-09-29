@@ -1,4 +1,4 @@
-''' A HelloWorldProvider Service Provider '''
+''' An EventProvider Service Provider '''
 from masonite.provider import ServiceProvider
 from events import Event
 from events.commands import EventCommand
