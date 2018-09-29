@@ -1,8 +1,12 @@
-''' An EventProvider Service Provider '''
+""" An EventProvider Service Provider """
+
+import builtins
+
 from masonite.provider import ServiceProvider
+
 from events import Event
 from events.commands import EventCommand
-import builtins
+
 
 class EventProvider(ServiceProvider):
 
