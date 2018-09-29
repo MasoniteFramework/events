@@ -1,11 +1,13 @@
 """ A EventCommand Command """
-from cleo import Command
+
 import os
+
+from cleo import Command
 
 
 class EventCommand(Command):
     """
-    Description of command
+    Creates a new event listener
 
     event:listener
         {name : Name of the event you want to create}
