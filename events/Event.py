@@ -116,10 +116,6 @@ class Event:
         
         Returns:
             dict
-        """[summary]
-        
-        Returns:
-            [type] -- [description]
         """
 
         return self._arguments[argument]
