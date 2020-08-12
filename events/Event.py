@@ -19,7 +19,7 @@ class Event:
         self.container = container
 
     def event(self, event):
-        """Starts the event observer    
+        """Starts the event observer
 
         Arguments:
             event {string|object}
@@ -55,14 +55,19 @@ class Event:
         """
 
         fired_listeners = {}
-        if isinstance(events, str) and '*' in events:
+        if isinstance(events, str) and "*" in events:
             for event_action, listener_events in self.listeners.items():
                 fired_listeners.update({event_action: []})
                 for listener in listener_events:
-                    search = events.split('*')
-                    if events.endswith('*') and event_action.startswith(search[0]) \
-                            or events.startswith('*') and event_action.endswith(search[1]) \
-                            or event_action.startswith(search[0]) and event_action.endswith(search[1]):
+                    search = events.split("*")
+                    if (
+                        events.endswith("*")
+                        and event_action.startswith(search[0])
+                        or events.startswith("*")
+                        and event_action.endswith(search[1])
+                        or event_action.startswith(search[0])
+                        and event_action.endswith(search[1])
+                    ):
                         event = self.container.resolve(listener)
                         fired_listeners[event_action].append(event)
                         for key, value in keywords.items():
@@ -107,7 +112,10 @@ class Event:
         for listener in listeners:
             if not isinstance(listener.subscribe, list):
                 raise InvalidSubscriptionType(
-                    "'subscribe' attribute on {0} class must be a list".format(listener.__name__))
+                    "'subscribe' attribute on {0} class must be a list".format(
+                        listener.__name__
+                    )
+                )
             for action in listener.subscribe:
                 self.listen(action, [listener])
 
