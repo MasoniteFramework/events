@@ -13,9 +13,9 @@ class EventProvider(ServiceProvider):
     wsgi = False
 
     def register(self):
-        self.app.bind('Event', Event(self.app))
-        self.app.bind('EventCommand', EventCommand())
-        builtins.event = self.app.make('Event').fire
+        self.app.bind("Event", Event(self.app))
+        self.app.bind("EventCommand", EventCommand())
+        builtins.event = self.app.make("Event").fire
 
     def boot(self):
         pass

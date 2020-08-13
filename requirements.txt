@@ -1,3 +1,4 @@
 coveralls
 pytest
 masonite
+flake8
